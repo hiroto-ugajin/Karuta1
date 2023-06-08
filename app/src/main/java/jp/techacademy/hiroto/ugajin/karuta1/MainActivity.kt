@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.ImageButton
+import androidx.core.content.ContextCompat
 import jp.techacademy.hiroto.ugajin.karuta1.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -84,24 +85,25 @@ class MainActivity : AppCompatActivity() {
             val imageButton = findViewById<ImageButton>(imageButtonId)
             imageButton.setImageResource(shuffledDrawableArray[i])
         }
-        
 
         val buttonClickListener = View.OnClickListener { view ->
 
-//            val buttonIndex = 0 // ボタンのインデックス（0から始まる）
-//            val textViewIndex = 0 // textViewの表示されているテキストのinitialMessageArrayのインデックス
             // クリックされたボタンの処理
             when (view.id) {
                 R.id.button1 -> {
                     // ボタン1の処理
-                    val drawable = binding.button1.drawable
                     Log.d("my log", "ボタン１をタップしました")
+
+                    val drawable = binding.button1.drawable
+
                     Log.d("my log", "${drawable}")
+
+
 //                    val clickedImageIndex = if (drawable != null) drawableArray.indexOf(drawable) else -1
 //
 //                    val displayedMessage: String = textView.text.toString()
 //                    val displayedMessageIndex: Int = if (displayedMessage!= null) initialMessageArray.indexOf(displayedMessage) else -1
-//
+
 //                    if (clickedImageIndex != -1 && displayedMessageIndex != -1 && clickedImageIndex == displayedMessageIndex) {
 //// メッセージのインデックスと画像のインデックスが一致する場合の処理
 //                        mediaPlayer1.start()
