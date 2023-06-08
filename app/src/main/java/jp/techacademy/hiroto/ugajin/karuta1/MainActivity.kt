@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.ImageButton
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import jp.techacademy.hiroto.ugajin.karuta1.databinding.ActivityMainBinding
 
@@ -74,66 +75,50 @@ class MainActivity : AppCompatActivity() {
         textView.text = messageArray[currentIndex]
         currentIndex = 1
 
-
+// 元のdrawableArrayのインデックスを保持する配列を作成する
+        val originalIndices = IntArray(drawableArray.size) { it }
         val shuffledDrawableArray = drawableArray.clone().apply {
             shuffle()
         }
 
-        // shuffledDrawableArrayを使用して画像を設定する
-        for (i in 0 until shuffledDrawableArray.size) {
-            val imageButtonId = resources.getIdentifier("button${i+1}", "id", "jp.techacademy.hiroto.ugajin.karuta1")
-            val imageButton = findViewById<ImageButton>(imageButtonId)
-            imageButton.setImageResource(shuffledDrawableArray[i])
-        }
-
+        // ボタンのクリックリスナーでボタンのtagを取得する
         val buttonClickListener = View.OnClickListener { view ->
-
+            // ボタンの処理
+            Log.d("my log", "buttonをタップしました")
             // クリックされたボタンの処理
-            when (view.id) {
-                R.id.button1 -> {
-                    // ボタン1の処理
-                    Log.d("my log", "ボタン１をタップしました")
+            val clickedImageIndex = view.tag as? Int ?: -1
+            // インデックスを使って必要な処理を行う
 
-                    val drawable = binding.button1.drawable
+            val displayedMessage: String = textView.text.toString()
+            val displayedMessageIndex: Int =
+                if (displayedMessage != null) initialMessageArray.indexOf(displayedMessage) else -1
 
-                    Log.d("my log", "${drawable}")
+            if (clickedImageIndex != -1 && displayedMessageIndex != -1 && clickedImageIndex == displayedMessageIndex) {
+// メッセージのインデックスと画像のインデックスが一致する場合の処理
+                mediaPlayer1.start()
+            } else {
+// 一致しない場合の処理
+                mediaPlayer2.start()
+//                                Toast.makeText(this, "Index: $clickedImageIndex", Toast.LENGTH_SHORT).show()
 
-
-//                    val clickedImageIndex = if (drawable != null) drawableArray.indexOf(drawable) else -1
-//
-//                    val displayedMessage: String = textView.text.toString()
-//                    val displayedMessageIndex: Int = if (displayedMessage!= null) initialMessageArray.indexOf(displayedMessage) else -1
-
-//                    if (clickedImageIndex != -1 && displayedMessageIndex != -1 && clickedImageIndex == displayedMessageIndex) {
-//// メッセージのインデックスと画像のインデックスが一致する場合の処理
-//                        mediaPlayer1.start()
-//                    } else {
-//// 一致しない場合の処理
-//                        mediaPlayer2.start()
-//                    }
-                }
-//                R.id.button2 -> {
-//                    // ボタン2の処理
-//                }
-//                // 他のボタンについても同様に処理を追加する
             }
         }
 
-        binding.button1.setOnClickListener(buttonClickListener)
-        binding.button2.setOnClickListener(buttonClickListener)
-        binding.button3.setOnClickListener(buttonClickListener)
-        binding.button4.setOnClickListener(buttonClickListener)
-        binding.button5.setOnClickListener(buttonClickListener)
-        binding.button6.setOnClickListener(buttonClickListener)
-        binding.button7.setOnClickListener(buttonClickListener)
-        binding.button8.setOnClickListener(buttonClickListener)
-        binding.button9.setOnClickListener(buttonClickListener)
-        binding.button10.setOnClickListener(buttonClickListener)
-        binding.button11.setOnClickListener(buttonClickListener)
-        binding.button12.setOnClickListener(buttonClickListener)
-        binding.button13.setOnClickListener(buttonClickListener)
-        binding.button14.setOnClickListener(buttonClickListener)
-        binding.button15.setOnClickListener(buttonClickListener)
-        binding.button16.setOnClickListener(buttonClickListener)
+        // shuffledDrawableArrayを使用して画像を設定する
+        for (i in 0 until shuffledDrawableArray.size) {
+            val imageButton = findViewById<ImageButton>(
+                resources.getIdentifier(
+                    "button${i + 1}",
+                    "id",
+                    packageName
+                )
+            )
+
+            val drawableIndex = drawableArray.indexOf(shuffledDrawableArray[i])
+            imageButton.setImageResource(shuffledDrawableArray[i])
+            imageButton.tag = drawableIndex
+
+            imageButton.setOnClickListener(buttonClickListener) // リスナーを設定する
+        }
     }
 }
