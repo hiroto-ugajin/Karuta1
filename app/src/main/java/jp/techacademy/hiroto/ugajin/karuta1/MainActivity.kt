@@ -107,6 +107,18 @@ class MainActivity : AppCompatActivity() {
                     textView.text = "16問中${correctCount}問正解"
                     correctCount = 0
 
+                    // currentIndexを増やすという部分の下に以下のコードを追加
+                    for (i in 0 until shuffledDrawableArray.size) {
+                        val button = findViewById<ImageButton>(
+                            resources.getIdentifier(
+                                "button${i + 1}",
+                                "id",
+                                packageName
+                            )
+                        )
+                        button.isEnabled = false
+                    }
+
                 } else {
                     currentIndex++
                     // 次の要素をtextViewに表示する
@@ -120,6 +132,18 @@ class MainActivity : AppCompatActivity() {
 
                     textView.text = "16問中${correctCount}問正解"
                     correctCount = 0
+
+                    // currentIndexを増やすという部分の下に以下のコードを追加
+                    for (i in 0 until shuffledDrawableArray.size) {
+                        val button = findViewById<ImageButton>(
+                            resources.getIdentifier(
+                                "button${i + 1}",
+                                "id",
+                                packageName
+                            )
+                        )
+                        button.isEnabled = false
+                    }
 
                 } else {
                     currentIndex++
