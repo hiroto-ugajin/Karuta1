@@ -73,7 +73,7 @@ class MainActivity : AppCompatActivity() {
         // テキストサイズを変更する
         textView.textSize = 25f // ピクセル単位で指定
         textView.text = messageArray[currentIndex]
-        currentIndex = 1
+        currentIndex = 0
 
 // 元のdrawableArrayのインデックスを保持する配列を作成する
         val originalIndices = IntArray(drawableArray.size) { it }
@@ -96,10 +96,33 @@ class MainActivity : AppCompatActivity() {
             if (clickedImageIndex != -1 && displayedMessageIndex != -1 && clickedImageIndex == displayedMessageIndex) {
 // メッセージのインデックスと画像のインデックスが一致する場合の処理
                 mediaPlayer1.start()
+                val clickedButton = view as? ImageButton
+                clickedButton?.let {
+                    it.alpha = 0.4f
+                    it.isEnabled = false
+                }
+
+                // currentIndexを増やす
+                currentIndex++
+                if (currentIndex >= messageArray.size) {
+                    currentIndex = 0 // currentIndexが配列のサイズを超えた場合は0に戻す
+                }
+
+                // 次の要素をtextViewに表示する
+                textView.text = messageArray[currentIndex]
+
             } else {
-// 一致しない場合の処理
                 mediaPlayer2.start()
-//                                Toast.makeText(this, "Index: $clickedImageIndex", Toast.LENGTH_SHORT).show()
+
+                // currentIndexを増やす
+                currentIndex++
+                if (currentIndex >= messageArray.size) {
+                    currentIndex = 0 // currentIndexが配列のサイズを超えた場合は0に戻す
+                }
+
+                // 次の要素をtextViewに表示する
+                textView.text = messageArray[currentIndex]
+
 
             }
         }
