@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Button
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.core.content.ContextCompat
@@ -57,6 +58,9 @@ class MainActivity : AppCompatActivity() {
 
     private var currentIndex = 0
 
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -74,6 +78,7 @@ class MainActivity : AppCompatActivity() {
         textView.textSize = 25f // ピクセル単位で指定
         textView.text = messageArray[currentIndex]
         currentIndex = 0
+        var correctCount = 0
 
 // 元のdrawableArrayのインデックスを保持する配列を作成する
         val originalIndices = IntArray(drawableArray.size) { it }
@@ -96,6 +101,7 @@ class MainActivity : AppCompatActivity() {
             if (clickedImageIndex != -1 && displayedMessageIndex != -1 && clickedImageIndex == displayedMessageIndex) {
 // メッセージのインデックスと画像のインデックスが一致する場合の処理
                 mediaPlayer1.start()
+                correctCount += 1
                 val clickedButton = view as? ImageButton
                 clickedButton?.let {
                     it.alpha = 0.4f
@@ -103,27 +109,79 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 // currentIndexを増やす
-                currentIndex++
-                if (currentIndex >= messageArray.size) {
-                    currentIndex = 0 // currentIndexが配列のサイズを超えた場合は0に戻す
+
+                if (currentIndex + 1  == messageArray.size) {
+//                    currentIndex = 0 // currentIndexが配列のサイズを超えた場合は0に戻す
+
+                    textView.text = "16問中${correctCount}問正解"
+                    correctCount = 0
+//                    currentIndex = -1
+
+                } else {
+                    currentIndex++
+                    // 次の要素をtextViewに表示する
+                    textView.text = messageArray[currentIndex]
                 }
 
-                // 次の要素をtextViewに表示する
-                textView.text = messageArray[currentIndex]
 
             } else {
                 mediaPlayer2.start()
 
                 // currentIndexを増やす
-                currentIndex++
-                if (currentIndex >= messageArray.size) {
-                    currentIndex = 0 // currentIndexが配列のサイズを超えた場合は0に戻す
+
+                if (currentIndex + 1 == messageArray.size) {
+//                    messageArray.size
+//                    currentIndex = 0 // currentIndexが配列のサイズを超えた場合は0に戻す
+
+                    textView.text = "16問中${correctCount}問正解"
+                    correctCount = 0
+//                    currentIndex = -1
+
+
+                } else {
+                    currentIndex++
+                    // 次の要素をtextViewに表示する
+                    textView.text = messageArray[currentIndex]
                 }
 
-                // 次の要素をtextViewに表示する
-                textView.text = messageArray[currentIndex]
+            }
 
 
+
+
+        }
+
+
+
+
+        // リセット処理を行う関数
+         fun resetGame() {
+            currentIndex = 0
+            correctCount = 0
+
+            val shuffledDrawableArray = drawableArray.clone().apply {
+                shuffle()
+            }
+            val messageArray = initialMessageArray.toMutableList().shuffled().toTypedArray()
+            val textView = binding.text
+            textView.text = messageArray[currentIndex]
+
+            // ボタンの透過度と有効/無効のリセット
+            for (i in 0 until shuffledDrawableArray.size) {
+                val imageButton = findViewById<ImageButton>(
+                    resources.getIdentifier(
+                        "button${i + 1}",
+                        "id",
+                        packageName
+                    )
+                )
+
+                val drawableIndex = drawableArray.indexOf(shuffledDrawableArray[i])
+                imageButton.setImageResource(shuffledDrawableArray[i])
+                imageButton.tag = drawableIndex
+
+                imageButton.alpha = 1.0f
+                imageButton.isEnabled = true
             }
         }
 
@@ -143,5 +201,17 @@ class MainActivity : AppCompatActivity() {
 
             imageButton.setOnClickListener(buttonClickListener) // リスナーを設定する
         }
+
+
+//        view.setOnClickListener {
+//            resetGame()
+//        }
+
+        // スタートボタンまたは画面のクリックでリセット処理を呼び出す
+        val startButton = findViewById<Button>(R.id.startButton)
+        startButton.setOnClickListener {
+            resetGame()
+        }
+
     }
 }
